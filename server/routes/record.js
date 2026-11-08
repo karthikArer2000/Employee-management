@@ -15,7 +15,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   let collection = await db.collection("records");
   let results = await collection.find({}).toArray();
-  res.send(results).status(200);
+  res.status(200).send(results);
 });
 
 // This section will help you get a single record by id
@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
     };
     let collection = await db.collection("records");
     let result = await collection.insertOne(newDocument);
-    res.send(result).status(204);
+    res.status(201).json(result);
   } catch (err) {
     console.error(err);
     res.status(500).send("Error adding record");

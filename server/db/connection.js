@@ -1,6 +1,12 @@
+import "dotenv/config";
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-const uri = process.env.ATLAS_URI || "";
+const uri = process.env.ATLAS_URI;
+
+if (!uri) {
+  throw new Error("ATLAS_URI is missing from .env file");
+}
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -10,17 +16,17 @@ const client = new MongoClient(uri, {
 });
 
 try {
-  // Connect the client to the server
   await client.connect();
-  // Send a ping to confirm a successful connection
+
   await client.db("admin").command({ ping: 1 });
-  console.log(
-   "Pinged your deployment. You successfully connected to MongoDB!"
-  );
-} catch(err) {
-  console.error(err);
+
+  console.log("Successfully connected to MongoDB!");
+
+} catch (err) {
+  console.error("MongoDB connection failed:", err);
+  process.exit(1);
 }
 
-let db = client.db("employees");
+const db = client.db("employees");
 
 export default db;
